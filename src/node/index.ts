@@ -1,2 +1,1 @@
-// export * from "path/to/tsfilewithoutextension";
-
+export * from "../common/list";
