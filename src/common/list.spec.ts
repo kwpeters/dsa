@@ -120,6 +120,53 @@ test("List", {}, function (t: test.Test): void {
     );
 
 
+    t.test("getAt() should throw if the index specified is too low",
+        function (t: test.Test): void {
+            t.plan(1);
+
+            const list: List<number> = new List<number>();
+            list.push(1).push(2).push(3);
+
+            t.throws(() => {
+               list.getAt(-1);
+            });
+        }
+    );
+
+
+    t.test("getAt() should throw if the index specified is too high",
+        function (t: test.Test): void {
+            t.plan(1);
+
+            const list: List<number> = new List<number>();
+            list.push(1).push(2).push(3);
+
+            t.throws(() => {
+                list.getAt(3);
+            });
+        }
+    );
+
+
+    t.test("insert() should insert the specified value in front of the specified element",
+        function (t: test.Test): void {
+            const list: List<number> = new List<number>();
+            list.push(2).push(4).push(6);
+            let it: Iterator<number> = list.begin();
+            it.next();
+            const itResult: Iterator<number> = list.insert(it, 3);
+
+            t.equal(list.length, 4);
+            t.equal(list.getAt(0), 2);
+            t.equal(list.getAt(1), 3);
+            t.equal(list.getAt(2), 4);
+            t.equal(list.getAt(3), 6);
+            t.equal(itResult.value, 3);
+            t.end();
+        }
+    );
+
+
     t.test("ForwardIterator",
         function (t: test.Test): void {
 
