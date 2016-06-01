@@ -272,13 +272,14 @@ test("List", {}, function (t: test.Test): void {
                     const list: List<number> = List.fromArray([1, 2, 3]);
                     const itA: Iterator<number> = list.begin();
                     const itB: Iterator<number> = itA.clone();
-                    
+
+                    // The clone is equivalent.
                     t.assert(itA.equals(itB));
                     t.equal(itA.value, itB.value);
-                    
-                    itB.next();
 
-                    t.assert(!itA.equals(itB));
+                    // The clone is independent.
+                    itB.next();
+                    t.false(itA.equals(itB));
                     t.notEqual(itA.value, itB.value);
                     
                     t.end();
