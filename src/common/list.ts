@@ -8,10 +8,20 @@ export class DLNode<ValueType> {
 }
 
 
+/**
+ * A doubly-linked list.
+ *
+ * This linked list is implemented as a circular linked list with one node being
+ * the "end" node.
+ */
 export class List<ValueType> {
 
     private _end: DLNode<ValueType>;
 
+
+    /**
+     * Creates a new List object.
+     */
     constructor() {
         this._end = new DLNode<ValueType>();
         this._end.prev = this._end;
@@ -20,6 +30,11 @@ export class List<ValueType> {
     }
 
 
+    /**
+     * Gets the length of this List.  This operation takes O(n) time.  If you
+     * only want to know if this List is empty, see isEmpty().
+     * @returns {number} The number of elements in this List
+     */
     public get length(): number {
         let len: number = 0;
         let curNode: DLNode<ValueType> = this._end;
@@ -34,7 +49,7 @@ export class List<ValueType> {
 
 
     /**
-     * Determines (in constant time) whether this list is empty.
+     * Determines (in constant time - O(1)) whether this list is empty.
      * @returns {boolean} true if this list is empty.  false otherwise.
      */
     public get isEmpty(): boolean {
@@ -44,16 +59,32 @@ export class List<ValueType> {
     }
 
 
+    /**
+     * Returns an Iterator that points to the first element in this List.
+     * @returns {Iterator<ValueType>} An Iterator pointing to the first element
+     * in this List.
+     */
     public begin(): Iterator<ValueType> {
         return new Iterator(this._end.next, this._end);
     }
 
 
+    /**
+     * Returns an Iterator that points to an element one past the end of this
+     * List.
+     * @returns {Iterator<ValueType>} An Iterator pointing to an element one
+     * past the end of this list.
+     */
     public end(): Iterator<ValueType> {
         return new Iterator(this._end, this._end);
     }
 
 
+    /**
+     * Adds a new value onto the end of this List.
+     * @param value - The value to be appended
+     * @returns {List} - This list (to allow chaining)
+     */
     public push(value: ValueType): List<ValueType> {
         const newNode: DLNode<ValueType> = new DLNode<ValueType>();
         const prevNode: DLNode<ValueType> = this._end.prev;
@@ -72,6 +103,10 @@ export class List<ValueType> {
     }
 
 
+    /**
+     * Removes the element on the end of this List and returns its value.
+     * @returns {ValueType} The value associated with the removed element
+     */
     public pop(): ValueType {
         const val: ValueType = this._end.prev.value;
 
@@ -82,12 +117,23 @@ export class List<ValueType> {
     }
 
 
+    /**
+     * Removes the specified element from this List.
+     * @param it - Iterator pointing to the element to be removed.
+     * @returns {Iterator<ValueType>} An iterator pointing to the element
+     * following the removed element
+     */
     public remove(it: Iterator<ValueType>): Iterator<ValueType> {
         const nextNode: DLNode<ValueType> = this.removeNode(it._getDLNode());
         return new Iterator(nextNode, this._end);
     }
 
 
+    /**
+     * Gets the value at the specified index.
+     * @param index - The index of the value to retrieve
+     * @returns {ValueType} The value at the specified index
+     */
     public getAt(index: number): ValueType {
         if (index < 0) {
             throw new Error("Index out of range.");
@@ -135,6 +181,11 @@ export class List<ValueType> {
     }
 
 
+    /**
+     * Helper method that removes a node from this linked list.
+     * @param removeNode - The node to be removed
+     * @returns {DLNode<ValueType>} The node following the removed node
+     */
     private removeNode(removeNode: DLNode<ValueType>): DLNode<ValueType> {
         const prevNode: DLNode<ValueType> = removeNode.prev;
         const nextNode: DLNode<ValueType> = removeNode.next;
@@ -164,6 +215,11 @@ export class Iterator<ValueType> {
     private _endNode: DLNode<ValueType>;
 
 
+    /**
+     * Creates a new Iterator
+     * @param curNode - The node the Iterator should be pointing to
+     * @param endNode - The end node of the linked list
+     */
     constructor(curNode: DLNode<ValueType>, endNode: DLNode<ValueType>) {
         this._curNode = curNode;
         this._endNode = endNode;
