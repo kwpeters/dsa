@@ -224,7 +224,7 @@ test("List", {}, function (t: test.Test): void {
     );
     
 
-    t.test("ForwardIterator",
+    t.test("Iterator",
         function (t: test.Test): void {
 
             t.test("can traverse a 0-length list",
@@ -331,6 +331,34 @@ test("List", {}, function (t: test.Test): void {
 
                     res = it.next();
                     t.equal(res.done, true);
+
+                    t.end();
+                }
+            );
+            
+            
+            t.test("can move to previous element",
+                function (t: test.Test): void {
+                    const list: List<number> = List.fromArray([1, 2, 3, 4, 5]);
+                    let it: Iterator<number> = list.begin();
+                    
+                    it.prev();
+                    t.true(list.begin().equals(it), "Will to move in front of the beginning node.");
+                    
+                    it = list.end();
+                    t.equal(it.value, undefined, "Value at end() is undefined.");
+                    it.prev();
+                    t.equal(it.value, 5);
+                    it.prev();
+                    t.equal(it.value, 4);
+                    it.prev();
+                    t.equal(it.value, 3);
+                    it.prev();
+                    t.equal(it.value, 2);
+                    it.prev();
+                    t.equal(it.value, 1);
+                    it.prev();
+                    t.equal(it.value, 1);
 
                     t.end();
                 }

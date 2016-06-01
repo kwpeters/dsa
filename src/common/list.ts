@@ -270,11 +270,20 @@ export class Iterator<ValueType> {
     }
 
 
-    public next(): MoveIteratorRetType {
-        const retVal: MoveIteratorRetType = {};
+    public prev(): void {
+        const isAtBegin: boolean = this._isAtBegin();
 
+        if (!isAtBegin) {
+            this._curNode = this._curNode.prev;
+        }
+    }
+
+
+    public next(): MoveIteratorRetType {
         const isDone: boolean = this._isAtEnd();
-        retVal.done = isDone;
+        const retVal: MoveIteratorRetType = {
+            done: isDone
+        };
 
         if (!isDone) {
             retVal.value = this._curNode.value;
@@ -297,7 +306,12 @@ export class Iterator<ValueType> {
     public clone(): Iterator<ValueType> {
         return new Iterator<ValueType>(this._curNode, this._endNode);
     }
-    
+
+
+    private _isAtBegin(): boolean {
+        return this._endNode.next === this._curNode;
+    }
+
 
     private _isAtEnd(): boolean {
         return this._curNode === this._endNode;
