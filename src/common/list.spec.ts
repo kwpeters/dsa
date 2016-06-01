@@ -188,7 +188,27 @@ test("List", {}, function (t: test.Test): void {
         }
     );
 
-    
+
+    t.test("insert() can be used to insert multiple elements",
+        function (t: test.Test): void {
+            const list: List<number> = List.fromArray([5, 10, 15]);
+            let it: Iterator<number> = list.begin();
+            it.next();
+            const itResult: Iterator<number> = list.insert(it, 6, 7);
+
+            t.equal(list.length, 5);
+            t.equal(list.getAt(0), 5);
+            t.equal(list.getAt(1), 6);
+            t.equal(list.getAt(2), 7);
+            t.equal(list.getAt(3), 10);
+            t.equal(list.getAt(4), 15);
+            t.equal(itResult.value, 6);
+            t.end();
+        }
+    );
+
+
+
     t.test("toArray() should return an array with the same contents",
         function (t: test.Test): void {
             

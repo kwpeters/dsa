@@ -163,28 +163,35 @@ export class List<ValueType> {
 
 
     /**
-     * Inserts a new element into this list.
+     * Inserts new elements into this list.
      * @param pos - The new element will be inserted in front of this element
-     * @param value - The value of the new element
-     * @returns {Iterator<ValueType>} An Iterator pointing to the newly inserted
+     * @param values - The values to insert
+     * @returns {Iterator<ValueType>} An Iterator pointing to the first inserted
      * element
      */
-    public insert(pos: Iterator<ValueType>, value: ValueType): Iterator<ValueType> {
-        const newNode: DLNode<ValueType> = new DLNode<ValueType>();
-
+    public insert(pos: Iterator<ValueType>, ...values: ValueType[]): Iterator<ValueType> {
         const nextNode: DLNode<ValueType> = pos._getDLNode();
-        const prevNode: DLNode<ValueType> = nextNode.prev;
+        let prevNode: DLNode<ValueType> = nextNode.prev;
+        let itRet: Iterator<ValueType> = new Iterator<ValueType>(nextNode, this._end);
+        let newNode: DLNode<ValueType>;
 
-        // Setup the new node.
-        newNode.value = value;
-        newNode.prev = prevNode;
-        newNode.next = nextNode;
+        for (let curIndex: number = 0; curIndex < values.length; ++curIndex) {
+            newNode = new DLNode<ValueType>();
+            newNode.value = values[curIndex];
+            newNode.prev = prevNode;
+            prevNode.next = newNode;
 
-        // Splice the new node into the list.
-        prevNode.next = newNode;
-        nextNode.prev = newNode;
-        
-        return new Iterator<ValueType>(newNode, this._end);
+            prevNode = newNode;
+
+            if (curIndex === 0) {
+                itRet = new Iterator(newNode, this._end);
+            }
+        }
+
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+
+        return itRet;
     }
 
 
