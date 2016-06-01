@@ -1,6 +1,9 @@
 /// <reference path="../../typings/index.d.ts" />
 
 
+import {IConvertToArray} from "./interfaces";
+
+
 export class DLNode<ValueType> {
     public prev: DLNode<ValueType>;
     public next: DLNode<ValueType>;
@@ -14,7 +17,7 @@ export class DLNode<ValueType> {
  * This linked list is implemented as a circular linked list with one node being
  * the "end" node.
  */
-export class List<ValueType> {
+export class List<ValueType> implements IConvertToArray<ValueType> {
 
     private _end: DLNode<ValueType>;
 
