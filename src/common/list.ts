@@ -181,8 +181,11 @@ export class List<ValueType> {
             newNode.prev = prevNode;
             prevNode.next = newNode;
 
+            // We now have a new prvious node.
             prevNode = newNode;
 
+            // If this is the first, item inserted, remember it so we can return
+            // it.
             if (curIndex === 0) {
                 itRet = new Iterator(newNode, this._end);
             }
