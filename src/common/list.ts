@@ -19,6 +19,13 @@ export class List<ValueType> {
     private _end: DLNode<ValueType>;
 
 
+    public static fromArray<ValueType>(arr: ValueType[]): List<ValueType> {
+        const newList: List<ValueType> = new List<ValueType>();
+        arr.forEach(curVal => newList.push(curVal));
+        return newList;
+    }
+
+    
     /**
      * Creates a new List object.
      */
@@ -178,6 +185,20 @@ export class List<ValueType> {
         nextNode.prev = newNode;
         
         return new Iterator<ValueType>(newNode, this._end);
+    }
+
+
+    /**
+     * Converts this List to an array with the same values.
+     * @returns {ValueType[]} The converted array
+     */
+    public toArray(): ValueType[] {
+        const arr: ValueType[] = [];
+        const itEnd: Iterator<ValueType> = this.end();
+        for (let it: Iterator<ValueType> = this.begin(); !it.equals(itEnd); it.next()) {
+            arr.push(it.value);
+        }
+        return arr;
     }
 
 

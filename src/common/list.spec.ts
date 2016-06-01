@@ -4,6 +4,28 @@ import * as test from "tape";
 import {List, Iterator, MoveIteratorRetType} from "./list";
 
 test("List", {}, function (t: test.Test): void {
+    
+    
+    t.test("static",
+        function (t: test.Test): void {
+            
+            
+            t.test("fromArray() can be used to populate a list",
+                function (t: test.Test): void {
+                    
+                    const list: List<number> = List.fromArray([1, 2, 3]);
+                    
+                    t.equal(list.getAt(0), 1);
+                    t.equal(list.getAt(1), 2);
+                    t.equal(list.getAt(2), 3);
+                    t.end();
+                }
+            );
+            
+            
+        }
+    );
+    
 
     t.test("can be constructed", function (t: test.Test): void {
         const list: List<number> = new List<number>();
@@ -166,6 +188,21 @@ test("List", {}, function (t: test.Test): void {
         }
     );
 
+    
+    t.test("toArray() should return an array with the same contents",
+        function (t: test.Test): void {
+            
+            const list: List<number> = List.fromArray([1, 2, 3]);
+            const arr: number[] = list.toArray();
+            
+            t.equal(arr[0], 1);
+            t.equal(arr[1], 2);
+            t.equal(arr[2], 3);
+            
+            t.end();
+        }
+    );
+    
 
     t.test("ForwardIterator",
         function (t: test.Test): void {
