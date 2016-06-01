@@ -290,6 +290,11 @@ export class Iterator<ValueType> {
         }
     }
 
+    
+    public clone(): Iterator<ValueType> {
+        return new Iterator<ValueType>(this._curNode, this._endNode);
+    }
+    
 
     private _isAtEnd(): boolean {
         return this._curNode === this._endNode;

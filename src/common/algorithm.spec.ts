@@ -2,7 +2,7 @@
 
 import * as test from "tape";
 import {List, Iterator} from "./list";
-import {advance, find} from "./algorithm";
+import {advance, find, distance} from "./algorithm";
 
 
 test("advance()", {}, function (t: test.Test): void {
@@ -54,6 +54,37 @@ test("advance()", {}, function (t: test.Test): void {
 });
 
 
+test("distance()", {}, function (t: test.Test): void {
+
+    t.test("will return 0 when passed equivalent iterators",
+        function (t:test.Test):void {
+            const list:List<number> = List.fromArray([1, 2, 3, 4, 5, 6, 7, 8]);
+            const itA: Iterator<number> = list.begin();
+            const itB: Iterator<number> = list.begin();
+            
+            t.equal(distance(itA, itB), 0);
+            t.equal(distance(itB, itA), 0);
+            
+            t.end();
+        }
+    );
+
+
+    t.test("can correctly calculate the distance",
+        function (t:test.Test):void {
+            const list:List<number> = List.fromArray([1, 2, 3, 4, 5, 6, 7, 8]);
+            const itA: Iterator<number> = list.begin();
+            const itB: Iterator<number> = list.begin();
+            advance(itB, 5);
+
+            t.equal(distance(itA, itB), 5);
+            
+            t.end();
+        }
+    );
+
+});
+
 
 test("find()", {}, function (t: test.Test): void {
 
@@ -71,6 +102,5 @@ test("find()", {}, function (t: test.Test): void {
             t.end();
         }
     );
-
 
 });

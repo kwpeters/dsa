@@ -16,6 +16,27 @@ export function advance<ValueType>(it: Iterator<ValueType>, numTimes: number): v
 
 
 /**
+ * Calculates the distance between two (ordered) iterators.
+ * @param itA - The lower Iterator
+ * @param itB - The upper Iterator
+ * @returns {number} The distance from itA to itB
+ */
+export function distance<ValueType>(itA: Iterator<ValueType>, itB: Iterator<ValueType>): number {
+    "use strict";
+
+    let distance: number = 0;
+    let itCur: Iterator<ValueType> = itA.clone();
+
+    while (!itCur.equals(itB)) {
+        itCur.next();
+        ++distance;
+    }
+
+    return distance;
+}
+
+
+/**
  * Attempts to find the specified value in the range [itBegin, itEnd)
  * @param itBegin - The beginning of the range to search (inclusive)
  * @param itEnd - The end of the range to search (exclusive)

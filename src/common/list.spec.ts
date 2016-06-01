@@ -265,6 +265,25 @@ test("List", {}, function (t: test.Test): void {
                     t.end();
                 }
             );
+            
+            
+            t.test("can clone() to get an equivlent, independent Iterator",
+                function (t: test.Test): void {
+                    const list: List<number> = List.fromArray([1, 2, 3]);
+                    const itA: Iterator<number> = list.begin();
+                    const itB: Iterator<number> = itA.clone();
+                    
+                    t.assert(itA.equals(itB));
+                    t.equal(itA.value, itB.value);
+                    
+                    itB.next();
+
+                    t.assert(!itA.equals(itB));
+                    t.notEqual(itA.value, itB.value);
+                    
+                    t.end();
+                }
+            );
 
 
             t.test("can traverse a 1-element list",
