@@ -265,13 +265,13 @@ test("List", {}, function (t: test.Test): void {
                     t.end();
                 }
             );
-            
-            
-            t.test("can clone() to get an equivlent, independent Iterator",
+
+
+            t.test("offset(0) will create an equal but independent Iterator",
                 function (t: test.Test): void {
                     const list: List<number> = List.fromArray([1, 2, 3]);
                     const itA: Iterator<number> = list.begin();
-                    const itB: Iterator<number> = itA.clone();
+                    const itB: Iterator<number> = itA.offset(0);
 
                     // The clone is equivalent.
                     t.assert(itA.equals(itB));
@@ -281,6 +281,54 @@ test("List", {}, function (t: test.Test): void {
                     itB.next();
                     t.false(itA.equals(itB));
                     t.notEqual(itA.value, itB.value);
+                    
+                    t.end();
+                }
+            );
+
+
+            t.test("offset() will create an appropriate Iterator when given positive offsets",
+                function (t: test.Test): void {
+                    const list: List<number> = List.fromArray([1, 2, 3, 4, 5]);
+
+                    let it: Iterator<number> = list.begin().offset(1);
+                    t.equal(it.value, 2);
+
+                    it = list.begin().offset(4);
+                    t.equal(it.value, 5);
+
+                    it = list.begin().offset(5);
+                    t.true(it.equals(list.end()));
+
+                    it = list.begin().offset(7);
+                    t.true(it.equals(list.end()));
+
+                    t.end();
+                }
+            );
+
+
+            t.test("offset() will create an appropriate Iterator when given negative offsets",
+                function (t: test.Test): void {
+                    const list: List<number> = List.fromArray([1, 2, 3, 4, 5]);
+
+                    let it: Iterator<number> = list.end().offset(0);
+                    t.true(it.equals(list.end()));
+
+                    it = list.end().offset(-1);
+                    t.equal(it.value, 5);
+
+                    it = list.end().offset(-4);
+                    t.equal(it.value, 2);
+
+                    it = list.end().offset(-5);
+                    t.equal(it.value, 1);
+
+                    it = list.end().offset(-6);
+                    t.equal(it.value, 1);
+
+                    it = list.end().offset(-7);
+                    t.equal(it.value, 1);
                     
                     t.end();
                 }

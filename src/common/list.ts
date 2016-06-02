@@ -2,6 +2,7 @@
 
 
 import {IConvertToArray} from "./interfaces";
+import {advance} from "./algorithm";
 
 
 export class DLNode<ValueType> {
@@ -302,9 +303,20 @@ export class Iterator<ValueType> {
         }
     }
 
+    public set value(val: ValueType) {
+        if (this._isAtEnd()) {
+            throw new Error("Cannot set value of end element.");
+        } else {
+            this._curNode.value = val;
+        }
+    }
+
     
-    public clone(): Iterator<ValueType> {
-        return new Iterator<ValueType>(this._curNode, this._endNode);
+    public offset(offset: number): Iterator<ValueType> {
+        const it: Iterator<ValueType> = new Iterator<ValueType>(this._curNode, this._endNode);
+        advance(it, offset);
+        return it;
+
     }
 
 
