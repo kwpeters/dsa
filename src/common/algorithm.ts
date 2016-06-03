@@ -126,6 +126,12 @@ export function partition<ValueType>(
 }
 
 
+/**
+ * Does an in-place sort of the elements in the range [itFirst, itLast).  The
+ * Quicksort algorithm has O(n * log(n)) complexity.
+ * @param itFirst - The first element in the range to be sorted (included)
+ * @param itLast - The last element of the range to be sorted (excluded)
+ */
 export function quicksort<ValueType>(
     itFirst: Iterator<ValueType>,
     itLast:  Iterator<ValueType>
