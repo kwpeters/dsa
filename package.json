@@ -32,7 +32,5 @@
     "tape": "4.4.0"
   },
   "dependencies": {
-    "bluebird": "^3.3.4",
-    "lodash": "^4.6.1"
   }
 }
