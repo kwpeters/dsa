@@ -13,37 +13,37 @@ export function getRandom(): number {
 
 /**
  * Returns a random (floating point) number.
- * @param min - The minimum possible value (included)
- * @param max - The maximum value (excluded)
+ * @param minIncluded - The minimum possible value
+ * @param maxExcluded - The maximum value
  * @returns {number} The generated random floating point number
  */
-export function getRandomArbitrary(min: number, max: number): number {
+export function getRandomFloat(minIncluded: number, maxExcluded: number): number {
     "use strict";
-    return Math.random() * (max - min) + min;
+    return Math.random() * (maxExcluded - minIncluded) + minIncluded;
 }
 
 
 /**
- * Returns a random integer between min (included) and max (excluded)
- * @param min - The minimum possible value (included)
- * @param max - The maximum possible value (excuded)
+ * Returns a random integer between minIncluded and maxExcluded
+ * @param minIncluded - The minimum possible value
+ * @param maxExcluded - The maximum possible value
  * @returns {number} The generated random integer
  */
-export function getRandomInt(min: number, max: number): number {
+export function getRandomInt(minIncluded: number, maxExcluded: number): number {
     "use strict";
     // Using Math.round() will give you a non-uniform distribution!
-    return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (maxExcluded - minIncluded)) + minIncluded;
 }
 
 
 /**
- * Returns a random integer between min (included) and max (included)
- * @param min - The minimum possible value (included)
- * @param max - The maximum possible value (included)
+ * Returns a random integer between minIncluded and maxIncluded
+ * @param minIncluded - The minimum possible value
+ * @param maxIncluded - The maximum possible value
  * @returns {number} The generated random integer
  */
-export function getRandomIntInclusive(min: number, max: number): number {
+export function getRandomIntInclusive(minIncluded: number, maxIncluded: number): number {
     "use strict";
     // Using Math.round() will give you a non-uniform distribution!
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (maxIncluded - minIncluded + 1)) + minIncluded;
 }
