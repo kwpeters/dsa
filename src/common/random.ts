@@ -40,7 +40,7 @@ export function getRandomInt(min: number, max: number): number {
  * Returns a random integer between min (included) and max (included)
  * @param min - The minimum possible value (included)
  * @param max - The maximum possible value (included)
- * @returns {any} The generated random integer
+ * @returns {number} The generated random integer
  */
 export function getRandomIntInclusive(min: number, max: number): number {
     "use strict";
