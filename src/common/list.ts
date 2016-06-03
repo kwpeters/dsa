@@ -21,6 +21,7 @@ export class DLNode<ValueType> {
 export class List<ValueType> implements IConvertToArray<ValueType> {
 
     private _end: DLNode<ValueType>;
+    // todo: Make length O(1) by keeping track of the length.
 
 
     public static fromArray<ValueType>(arr: ValueType[]): List<ValueType> {
