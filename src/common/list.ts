@@ -21,7 +21,7 @@ export class DLNode<ValueType> {
 export class List<ValueType> implements IConvertToArray<ValueType> {
 
     private _end: DLNode<ValueType>;
-    // todo: Make length O(1) by keeping track of the length.
+    private _length: number;
 
 
     public static fromArray<ValueType>(arr: ValueType[]): List<ValueType> {
@@ -39,24 +39,17 @@ export class List<ValueType> implements IConvertToArray<ValueType> {
         this._end.prev = this._end;
         this._end.next = this._end;
         this._end.value = undefined;
+
+        this._length = 0;
     }
 
 
     /**
-     * Gets the length of this List.  This operation takes O(n) time.  If you
-     * only want to know if this List is empty, see isEmpty().
+     * Gets the length of this List.  This operation takes O(1) time.
      * @returns {number} The number of elements in this List
      */
     public get length(): number {
-        let len: number = 0;
-        let curNode: DLNode<ValueType> = this._end;
-        
-        do {
-            curNode = curNode.next;
-            ++len;
-        } while (curNode !== this._end);
-        
-        return len - 1;
+        return this._length;
     }
 
 
@@ -65,9 +58,7 @@ export class List<ValueType> implements IConvertToArray<ValueType> {
      * @returns {boolean} true if this list is empty.  false otherwise.
      */
     public get isEmpty(): boolean {
-        // This list is empty if the first node in the list (this._end.next)
-        // points to the end.
-        return this._end.next === this._end;
+        return this._length === 0;
     }
 
 
@@ -98,17 +89,7 @@ export class List<ValueType> implements IConvertToArray<ValueType> {
      * @returns {List} - This list (to allow chaining)
      */
     public push(value: ValueType): List<ValueType> {
-        const newNode: DLNode<ValueType> = new DLNode<ValueType>();
-        const prevNode: DLNode<ValueType> = this._end.prev;
-
-        // Setup the new node.
-        newNode.value = value;
-        newNode.next = this._end;
-        newNode.prev = prevNode;
-        
-        // Splice the new node into the list.
-        prevNode.next = newNode;
-        this._end.prev = newNode;
+        this.insertNode(this._end, value);
 
         // Return this to allow chaining.
         return this;
@@ -175,31 +156,9 @@ export class List<ValueType> implements IConvertToArray<ValueType> {
      * element
      */
     public insert(pos: Iterator<ValueType>, ...values: ValueType[]): Iterator<ValueType> {
-        const nextNode: DLNode<ValueType> = pos._getDLNode();
-        let prevNode: DLNode<ValueType> = nextNode.prev;
-        let itRet: Iterator<ValueType> = new Iterator<ValueType>(nextNode, this._end);
-        let newNode: DLNode<ValueType>;
 
-        for (let curIndex: number = 0; curIndex < values.length; ++curIndex) {
-            newNode = new DLNode<ValueType>();
-            newNode.value = values[curIndex];
-            newNode.prev = prevNode;
-            prevNode.next = newNode;
-
-            // We now have a new prvious node.
-            prevNode = newNode;
-
-            // If this is the first, item inserted, remember it so we can return
-            // it.
-            if (curIndex === 0) {
-                itRet = new Iterator(newNode, this._end);
-            }
-        }
-
-        prevNode.next = nextNode;
-        nextNode.prev = prevNode;
-
-        return itRet;
+        const firstInsertedNode: DLNode<ValueType> = this.insertNode(pos._getDLNode(), ...values);
+        return new Iterator(firstInsertedNode, this._end);
     }
 
 
@@ -229,8 +188,47 @@ export class List<ValueType> implements IConvertToArray<ValueType> {
         // Remove the element from the list.
         prevNode.next = nextNode;
         nextNode.prev = prevNode;
+        this._length -= 1;
 
         return nextNode;
+    }
+
+
+    /**
+     * Helper method that inserts new elements into this list.
+     * @param pos - The new element will be inserted in front of this element
+     * @param values - The values to insert
+     * @returns {DLNode<ValueType>} The first inserted DLNode
+     */
+    private insertNode(pos: DLNode<ValueType>, ...values: ValueType[]): DLNode<ValueType> {
+        const nextNode: DLNode<ValueType> = pos;
+        let prevNode: DLNode<ValueType> = nextNode.prev;
+        let nodeRet: DLNode<ValueType> = nextNode;
+        // let itRet: Iterator<ValueType> = new Iterator<ValueType>(nextNode, this._end);
+        let newNode: DLNode<ValueType>;
+
+        for (let curIndex: number = 0; curIndex < values.length; ++curIndex) {
+            newNode = new DLNode<ValueType>();
+            newNode.value = values[curIndex];
+            newNode.prev = prevNode;
+            prevNode.next = newNode;
+
+            this._length += 1;
+
+            // We now have a *new* previous node.
+            prevNode = newNode;
+
+            // If this is the first, item inserted, remember it so we can return
+            // it.
+            if (curIndex === 0) {
+                nodeRet = newNode;
+            }
+        }
+
+        prevNode.next = nextNode;
+        nextNode.prev = prevNode;
+
+        return nodeRet;
     }
 
 }

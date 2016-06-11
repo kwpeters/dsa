@@ -86,11 +86,14 @@ test("List", {}, function (t: test.Test): void {
             const list: List<number> = new List<number>();
             list.push(1);
             t.equal(list.length, 1);
+            t.equal(list.getAt(0), 1);
             
             // Should allow chaining.
             list.push(2).push(3);
             t.equal(list.length, 3);
-            
+            t.equal(list.getAt(1), 2);
+            t.equal(list.getAt(2), 3);
+
             t.end();
         }
     );
@@ -103,8 +106,11 @@ test("List", {}, function (t: test.Test): void {
             t.equal(list.length, 3);
 
             t.equal(list.pop(), 3);
+            t.equal(list.length, 2);
             t.equal(list.pop(), 2);
+            t.equal(list.length, 1);
             t.equal(list.pop(), 1);
+            t.equal(list.length, 0);
 
             t.end();
         }
@@ -121,8 +127,8 @@ test("List", {}, function (t: test.Test): void {
             list.remove(itRemove);
 
             t.equal(list.length, 2);
-            t.equal(list.pop(), 3);
-            t.equal(list.pop(), 1);
+            t.equal(list.getAt(0), 1);
+            t.equal(list.getAt(1), 3);
 
             t.end();
         }
