@@ -124,29 +124,3 @@ export function partition<ValueType>(
         itB.value = tmpVal;
     }
 }
-
-
-/**
- * Does an in-place sort of the elements in the range [itFirst, itLast).  The
- * Quicksort algorithm has O(n * log(n)) complexity.
- * @param itFirst - The first element in the range to be sorted (included)
- * @param itLast - The last element of the range to be sorted (excluded)
- */
-export function quicksort<ValueType>(
-    itFirst: Iterator<ValueType>,
-    itLast:  Iterator<ValueType>
-): void {
-    "use strict";
-
-    // todo: Implement.
-    //
-    // Pseudocode
-    // ----------
-    // Check for the base cases and return early if possible.
-    // Get an iterator to a random element (the pivot) in [itFirst, itLast).
-    // Remove the selected pivot element, updating itFirst and itLast if necessary
-    // partition() from itFirst to itLast based on curVal <= pivot
-    // Insert the pivot element at the beginning of the second range (returned from partition()).
-    // quicksort() the range in front of the pivot.
-    // quicksort() the range following the pivot.
-}

@@ -2,7 +2,8 @@
 
 
 import {IConvertToArray} from "./interfaces";
-import {advance} from "./algorithm";
+import {advance, partition, distance} from "./algorithm";
+import {getRandomInt} from "./random";
 
 
 export class DLNode<ValueType> {
@@ -176,6 +177,10 @@ export class List<ValueType> implements IConvertToArray<ValueType> {
     }
 
 
+    public quicksort(): void {
+        this.quicksortImpl(this.begin(), this.end());
+    }
+
     /**
      * Helper method that removes a node from this linked list.
      * @param removeNode - The node to be removed
@@ -230,6 +235,121 @@ export class List<ValueType> implements IConvertToArray<ValueType> {
 
         return nodeRet;
     }
+
+
+    // The following implementation is the canonical implementation without
+    // optimizations.
+    // /**
+    //  * Does an in-place sort of the elements in the range [itFirst, itLast).
+    //  * This algorithm is O(n * log(n)).
+    //  * @param itFirst - The first element in the range to be sorted (included)
+    //  * @param itLast - The last element of the range to be sorted (excluded)
+    //  */
+    // private quicksortImpl(
+    //     itFirst: Iterator<ValueType>,
+    //     itLast: Iterator<ValueType>
+    // ): void {
+    //     "use strict";
+    //
+    //     const numElems: number = distance(itFirst, itLast);
+    //
+    //     // Check for the base cases and return early if possible.
+    //     if (numElems < 2) {
+    //         return;
+    //     }
+    //
+    //     // Get an iterator to a random element (the pivot) in [itFirst, itLast).
+    //     const pivotIndex: number = getRandomInt(0, numElems);
+    //     const itPivot: Iterator<ValueType> = itFirst.offset(pivotIndex);
+    //     const pivotValue: ValueType = itPivot.value;
+    //
+    //     if (itPivot.equals(itFirst)) {
+    //         itFirst = itPivot.offset(1);
+    //     }
+    //
+    //     // Remove the selected pivot element.
+    //     this.remove(itPivot);
+    //
+    //     // partition() from itFirst to itLast based on curVal <= pivot
+    //     let itPartition: Iterator<ValueType> = partition(itFirst, itLast, curVal => curVal < pivotValue);
+    //     const insertedAtBeginning: boolean = itPartition.equals(itFirst);
+    //
+    //     // Insert the pivot element at the beginning of the second range (returned from partition()).
+    //     itPartition = this.insert(itPartition, pivotValue);
+    //
+    //     // If we just inserted the pivot at the beginning of the sequence, adjust itFirst.
+    //     if (insertedAtBeginning) {
+    //         itFirst = itPartition;
+    //     }
+    //
+    //     // quicksort() the range in front of the pivot.
+    //     this.quicksortImpl(itFirst, itPartition);
+    //
+    //     // quicksort() the range following the pivot.
+    //     this.quicksortImpl(itPartition.offset(1), itLast);
+    // }
+
+    /**
+     * Does an in-place sort of the elements in the range [itFirst, itLast).
+     * This algorithm is O(n * log(n)).
+     * @param itFirst - The first element in the range to be sorted (included)
+     * @param itLast - The last element of the range to be sorted (excluded)
+     */
+    private quicksortImpl(
+        itFirst: Iterator<ValueType>,
+        itLast: Iterator<ValueType>
+    ): void {
+        "use strict";
+
+        // Normally, a random element would be selected as the pivot.  This,
+        // however, would require calculating how many elements are in [itFirst,
+        // itLast). Because we are operating on a list, that distance()
+        // operation is very costly.  So instead, we will just always use the
+        // first element as the pivot.
+
+        // If the sequence [itFirst, itLast) has 0 or 1 element, this is the
+        // base case and we can return immediately.
+        if (itFirst.equals(itLast) || itFirst.offset(1).equals(itLast)) {
+            return;
+        }
+
+        // Set the pivot.
+        const pivotIndex: number = 0;
+        const itPivot: Iterator<ValueType> = itFirst.offset(pivotIndex);
+        const pivotValue: ValueType = itPivot.value;
+
+        // Because the pivot element is always the first, we will always have to
+        // adjust itFirst.
+        itFirst = itPivot.offset(1);
+
+        // Remove the pivot element.
+        this.remove(itPivot);
+
+        // partition() from itFirst to itLast based on curVal <= pivot
+        let itPartition: Iterator<ValueType> = partition(itFirst, itLast, curVal => curVal < pivotValue);
+        const insertedAtBeginning: boolean = itPartition.equals(itFirst);
+        const insertedAtEnd: boolean = itPartition.equals(itLast);
+
+        // Insert the pivot element at the beginning of the second range (returned from partition()).
+        itPartition = this.insert(itPartition, pivotValue);
+
+        if (insertedAtBeginning) {
+            // We just inserted the pivot at the beginning of the sequence.  We
+            // only have to quicksort() the range following the pivot.
+            this.quicksortImpl(itPartition.offset(1), itLast);
+        } else if (insertedAtEnd) {
+            // We just inserted the pivot at the end of the sequence.  We only
+            // have to quicksort() the range in front of the pivot.
+            this.quicksortImpl(itFirst, itPartition);
+        } else {
+            // We inserted the pivot into the middle of the sequence, so we have
+            // to quicksort() the range infront of it and after it.
+            this.quicksortImpl(itFirst, itPartition);
+            this.quicksortImpl(itPartition.offset(1), itLast);
+        }
+
+    }
+
 
 }
 
